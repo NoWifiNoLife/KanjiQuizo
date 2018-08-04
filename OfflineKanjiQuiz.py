@@ -101,14 +101,23 @@ theLabel3.grid(row=0)
 entry1 = Entry(midFrame)
 entry1.grid(row=1)
 
+def showAnswer(event):
+    answer =  main['B66'].value
+    print(answer)
+
 
 button1 = Button(botFrame, text= 'Prev')
 button2 = Button(botFrame, text= 'Next')
 button3 = Button(botFrame, text= 'Menu')
+button4 = Button(botFrame, text= 'Show Answer') #no parenthesis!
+
+button4.bind("<Button-1>", showAnswer) #Button-1 means a left click on the button
 
 button1.grid(row=0, column=1)
 button2.grid(row=0, column=3)
 button3.grid(row=0, column=2)
+button4.grid(row= 0, column=4)
+
 root.mainloop()
 
 

@@ -1,0 +1,33 @@
+Making widets:
+
+Frames: call Frame object
+Buttons: call Button object
+Text: call Label object
+
+Placing things:
+Frames can only be packed.
+Buttons and text should be placed using grid.
+grid works like excel, rows and column; if no parameters are set for row or column or both, then it is 0 be default.
+
+
+Binding Functions:
+First make the function:
+
+	def showAnswer():
+		print("something")
+1. The function cannot have parameters passed. Because pressing a button won't be able to pass parameters
+
+Add the "command" parameter to the button:
+
+	button4 = Button(root, text="whatever", command= showAnswer)
+1. Note the command doesn't contain parenthesis as not parameters can be passed
+
+Alternatively, you can bind an "event" to the button by first adding event to the function, then:
+
+	def showAnswer(event):
+		print("something")
+
+calling the bind function.
+
+button4.bind("<Button-1>", showAnswer) #Button-1 means a left click on the button
+
