@@ -5,7 +5,7 @@ Created on Thu Aug  2 08:10:55 2018
 @author: MICHAEL
 """
 
-import openpyxl, random
+import openpyxl, random, datetime
 from openpyxl import load_workbook
 from openpyxl.compat import range
 from openpyxl.utils import get_column_letter
@@ -58,6 +58,7 @@ class KanjiQuiz(MegaExcel):
 
 def makingtheBase(low, high, history_log = []):
     try:
+        txtlog = open('KanjiQuizLog.txt', 'a')
         wb = MegaExcel('HeisigKanji.xlsx')
         main = wb.getSheet(0)
         correct_incorrect_log = {}
@@ -77,9 +78,16 @@ def makingtheBase(low, high, history_log = []):
             if MegaExcel.check(show_answer):
                 print('What is ' + main['B%s' % random_num].value + ' ?')
             play = input('Do you want to continue? (y/n):')
+        txtlog.write('\n' + datetime.datetime.today().strftime('%Y-%m-%d') + ' ' \
+                     + datetime.datetime.today().strftime('%T') + ' %s'% history_log)
+        txtlog.close()
         return correct_incorrect_log, history_log
     except Exception:
+        txtlog.write('\n' + datetime.datetime.today().strftime('%Y-%m-%d') + \
+                     ' ' + datetime.datetime.today().strftime('%T') + 'Error occured. recording... %s'% history_log)
+        txtlog.close()
         return history_log, 'error'
+    
 #wb = MegaExcel('HeisigKanji.xlsx')
 #main = wb.getSheet(0)
 """Making the GUI"""
