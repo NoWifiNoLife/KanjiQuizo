@@ -56,28 +56,30 @@ class KanjiQuiz(MegaExcel):
     #does things specific to kanjiquiz excel i.e column and stuff 
 
 
-def makingtheBase(low, high):
-    wb = MegaExcel('HeisigKanji.xlsx')
-    main = wb.getSheet(0)
-    history_log = []
-    correct_incorrect_log = {}
-    play = input('Do you want to continue? (y/n):')
-    while MegaExcel.check(play):
-        random_num = random.randint(low, high)
-        while random_num in history_log:
-            random_num = random.randint(low, high)
-        history_log.append(random_num)
-        print('What is ' + main['A%s' % random_num].value + ' ?')
-        correct_incorrect = input('Correct? (y/n): ')
-        if correct_incorrect.lower() == 'y':
-            correct_incorrect_log[random_num] = correct_incorrect_log.get(random_num, [0,0])[0] + 1
-        elif correct_incorrect.lower() == 'n':
-            correct_incorrect_log[random_num] = correct_incorrect_log.get(random_num, [0,0])[1] + 1
-        show_answer = input('Would you like to see the answer? (y/n):')
-        if MegaExcel.check(show_answer):
-            print('What is ' + main['B%s' % random_num].value + ' ?')
+def makingtheBase(low, high, history_log = []):
+    try:
+        wb = MegaExcel('HeisigKanji.xlsx')
+        main = wb.getSheet(0)
+        correct_incorrect_log = {}
         play = input('Do you want to continue? (y/n):')
-    return correct_incorrect_log
+        while MegaExcel.check(play):
+            random_num = random.randint(low, high)
+            while random_num in history_log:
+                random_num = random.randint(low, high)
+            history_log.append(random_num)
+            print('What is ' + main['A%s' % random_num].value + ' ?')
+            correct_incorrect = input('Correct? (y/n): ')
+            if correct_incorrect.lower() == 'y':
+                correct_incorrect_log[random_num] = correct_incorrect_log.get(random_num, [0,0])[0] + 1
+            elif correct_incorrect.lower() == 'n':
+                correct_incorrect_log[random_num] = correct_incorrect_log.get(random_num, [0,0])[1] + 1
+            show_answer = input('Would you like to see the answer? (y/n):')
+            if MegaExcel.check(show_answer):
+                print('What is ' + main['B%s' % random_num].value + ' ?')
+            play = input('Do you want to continue? (y/n):')
+        return correct_incorrect_log, history_log
+    except Exception:
+        return history_log, 'error'
 #wb = MegaExcel('HeisigKanji.xlsx')
 #main = wb.getSheet(0)
 """Making the GUI"""
