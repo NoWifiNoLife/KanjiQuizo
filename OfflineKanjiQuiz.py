@@ -9,16 +9,15 @@ import openpyxl, random
 from openpyxl import load_workbook
 from openpyxl.compat import range
 from openpyxl.utils import get_column_letter
-
+#from tkinter import *
+from tkinter import *
 
 class MegaExcel(object):
     #general excel things that all will need
     def __init__ (self, name_of_workbook):
         self.name_of_workbook = name_of_workbook
-    
-    def activatewb(self, name):
-        name = load_workbook(get_wb_name(self))
-        return name
+        workbook = load_workbook(name_of_workbook)
+        self.workbook = workbook
     
     def check(something):
         while something.lower() not in 'yn':
@@ -26,11 +25,18 @@ class MegaExcel(object):
         if something.lower() == 'y':
             return True
         return False
+    
+    def getSheet(self, sheet_number):
+        """assumes workbook is preloaded"""
+        sheet_name = self.getWB().get_sheet_names()[sheet_number]
+        sheet = self.getWB().get_sheet_by_name(sheet_name)
+        return sheet
 
-    #some simple getters
-    def get_wb_name(self):
-        """return a str"""
+    def getWBName(self):
         return self.name_of_workbook
+    
+    def getWB(self):
+        return self.workbook
     
 """test check"""
 #print(MegaExcel.check('h')) ###works!###
@@ -49,11 +55,10 @@ class KanjiQuiz(MegaExcel):
         pass
     #does things specific to kanjiquiz excel i.e column and stuff 
 
-wb = load_workbook('HeisigKanji.xlsx')
-first_sheet = wb.get_sheet_names()[0]
-main = wb.get_sheet_by_name(first_sheet)
 
 def makingtheBase(low, high):
+    wb = MegaExcel('HeisigKanji.xlsx')
+    main = wb.getSheet(0)
     history_log = []
     correct_incorrect_log = {}
     play = input('Do you want to continue? (y/n):')
@@ -73,5 +78,34 @@ def makingtheBase(low, high):
             print('What is ' + main['B%s' % random_num].value + ' ?')
         play = input('Do you want to continue? (y/n):')
     return correct_incorrect_log
-a = makingtheBase(300,502)
+#wb = MegaExcel('HeisigKanji.xlsx')
+#main = wb.getSheet(0)
+"""Making the GUI"""
+root = Tk()
+topFrame = Frame(root)
+midFrame = Frame(root)
+botFrame = Frame(root)
+a = input('type')
+if a:
+    theLabel1 = Label(root, text = main['A66'].value, font ='Times 100')
+    theLabel1.pack()
+    root.mainloop()
+    b = input('type')
+    if b: 
+        theLabel2 = Label(root, text = main['B66'].value, font ='Times 100')
+        theLabel2.pack()
+        root.mainloop()
+#theLabel2 = Label(root, text = 'Prev')
+#theLabel3 = Label(root, text = 'Menu')
+
+button1 = Button(botFrame, text= 'Prev')
+button2 = Button(botFrame, text= 'Next')
+button3 = Button(botFrame, text= 'Menu')
+
+botFrame.pack()
+button1.pack()
+
+theLabel1.pack()
+root.mainloop()
+
 
