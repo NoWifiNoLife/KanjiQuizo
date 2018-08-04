@@ -85,27 +85,30 @@ root = Tk()
 topFrame = Frame(root)
 midFrame = Frame(root)
 botFrame = Frame(root)
-a = input('type')
-if a:
-    theLabel1 = Label(root, text = main['A66'].value, font ='Times 100')
-    theLabel1.pack()
-    root.mainloop()
-    b = input('type')
-    if b: 
-        theLabel2 = Label(root, text = main['B66'].value, font ='Times 100')
-        theLabel2.pack()
-        root.mainloop()
-#theLabel2 = Label(root, text = 'Prev')
-#theLabel3 = Label(root, text = 'Menu')
+topFrame.pack()
+midFrame.pack()
+botFrame.pack()
+
+
+theLabel1 = Label(topFrame, text = main['A66'].value, font ='Times 100')
+theLabel2 = Label(topFrame, text = 'Michael\'s KanjiQuiz', fg = 'green')
+theLabel3 = Label(midFrame, text = 'Type \'y\' for correct or \'n\' for incorrect: ')
+
+theLabel1.grid(row=1)
+theLabel2.grid(row=0)
+theLabel3.grid(row=0)
+
+entry1 = Entry(midFrame)
+entry1.grid(row=1)
+
 
 button1 = Button(botFrame, text= 'Prev')
 button2 = Button(botFrame, text= 'Next')
 button3 = Button(botFrame, text= 'Menu')
 
-botFrame.pack()
-button1.pack()
-
-theLabel1.pack()
+button1.grid(row=0, column=1)
+button2.grid(row=0, column=3)
+button3.grid(row=0, column=2)
 root.mainloop()
 
 
