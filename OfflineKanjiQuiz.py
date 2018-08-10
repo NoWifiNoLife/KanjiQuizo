@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Aug  2 08:10:55 2018
-
 @author: MICHAEL
 """
 
@@ -41,21 +40,6 @@ class MegaExcel(object):
 """test check"""
 #print(MegaExcel.check('h')) ###works!###
 
-
-class KanjiQuiz(MegaExcel):
-    def __init__ (self, name):
-        #inherit MegaExcel initialization method
-        MegaExcel.__init__(self, name)
-        
-    def randomChoice(self, lower, upper, sheet):
-        return self.getWb().get_sheet_by_name(str(sheet))
-
-    
-    def startKanjiQuiz():
-        pass
-    #does things specific to kanjiquiz excel i.e column and stuff 
-
-
 def makingtheBase(low, high, history_log = []):
     try:
         txtlog = open('KanjiQuizLog.txt', 'a')
@@ -88,11 +72,70 @@ def makingtheBase(low, high, history_log = []):
         txtlog.close()
         return history_log, 'error'
     
-#wb = MegaExcel('HeisigKanji.xlsx')
-#main = wb.getSheet(0)
+wb = MegaExcel('HeisigKanji.xlsx')
+main = wb.getSheet(0)
 """Making the GUI"""
+
+class kanjiQuiz(object):
+    def __init__ (self, excel, high, low, master=root, flag = False, activeSheet=0):
+        history_log = []
+        self.high = high
+        self.low = low
+        self.history_log = history_log
+        if flag:
+            wb = MegaExcel(excel)
+            main = wb.getSheet(activeSheet)
+        topFrame = Frame(master)
+        midFrame = Frame(master)
+        botFrame = Frame(master)
+        topFrame.pack()
+        midFrame.pack()
+        botFrame.pack()
+        
+        #text a.k.a lables
+        theLabel1 = Label(topFrame, text = 'press start', font='Times 100')
+        theLabel2 = Label(topFrame, text = 'Michael\'s KanjiQuiz', fg = 'green')
+        theLabel3 = Label(midFrame, text = 'Type \'y\' for correct or \'n\' for incorrect: ')
+        
+        #text/label 
+        theLabel1.grid(row=1)
+        theLabel2.grid(row=0, column=1)
+        theLabel3.grid(row=0)
+        
+        #Buttons
+        button1 = Button(botFrame, text= 'Prev')
+        button2 = Button(botFrame, text= 'Next')
+        button3 = Button(botFrame, text= 'Menu')
+        button4 = Button(botFrame, text= 'Show Answer') #no parenthesis!
+        
+        butnStart = Button(topFrame, text= 'Start')
+        butnQuit = Button(topFrame, text= 'Quit')
+        butnStart.grid(row=0, column=0)
+        butnQuit.grid(row=0, column=2)
+        
+        #Button locis            
+        button1.grid(row=0, column=1)
+        button2.grid(row=0, column=3)
+        button3.grid(row=0, column=2)
+        button4.grid(row= 0, column=4)
+        
+        entry1 = Entry(midFrame)
+        entry1.grid()
+
+    def updateLabel(event):
+        num = random.randint(250, 550)
+        theLabel1['text'] = main['A%s' % num].value
+        
+        #Button binds
+    def binds(self, master, function):
+            button4.bind("<Button-1>", function) #Button-1 means a left click on the button
+            
+
+#        random.randint()
+#        text = main['A%s' % num].value, font ='Times 100'
+
 root = Tk()
-topFrame = Frame(root)
+topFrame = Frame(root, width=200, length=200)
 midFrame = Frame(root)
 botFrame = Frame(root)
 topFrame.pack()
@@ -111,10 +154,19 @@ theLabel3.grid(row=0)
 entry1 = Entry(midFrame)
 entry1.grid(row=1)
 
+history_log = [0, 66]
+low, high = 250, 550
 def showAnswer(event):
-    answer =  main['B66'].value
-    print(answer)
+    n = history_log[-1]
+    answer =  main['B%s' %  n].value
+    theLabel1['text'] = answer 
 
+def nextOne(event):
+    random_num = random.randint(low, high)
+    while random_num in history_log:
+        random_num = random.randint(low, high)
+    history_log.append(random_num)
+    theLabel1['text'] = main['A%s' %  random_num].value    
 
 button1 = Button(botFrame, text= 'Prev')
 button2 = Button(botFrame, text= 'Next')
@@ -122,6 +174,7 @@ button3 = Button(botFrame, text= 'Menu')
 button4 = Button(botFrame, text= 'Show Answer') #no parenthesis!
 
 button4.bind("<Button-1>", showAnswer) #Button-1 means a left click on the button
+button2.bind("<Button-1>", nextOne)
 
 button1.grid(row=0, column=1)
 button2.grid(row=0, column=3)
