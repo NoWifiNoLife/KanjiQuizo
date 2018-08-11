@@ -107,13 +107,15 @@ class Quiz(object):
         while random_num in history_log:
             random_num = random.randint(low,high)
         history_log.append(random_num)
+        theLabel1['image'] = None
         theLabel1['text'] = main['A%s' %  random_num].value
         current = len(history_log) - 1 #This part if  global current is not called it will create a new current and fuck shit 
     
     def SadGuts(event):
-        img = ImageTk.PhotoImage(Image.open("SadGuts.png"))
+        img = PhotoImage(file="SadGuts.png")
         theLabel1['image'] =  img
-        theLabel1['text'] = 'Sorry we currently are still working on this function'
+        theLabel1.image_names = img #I don't know why this works but its a reference thing http://effbot.org/pyfaq/why-do-my-tkinter-images-not-appear.htm
+        theLabel1['text'] = 'Nope'
             
     def runtk(self):
         try:
@@ -149,7 +151,7 @@ class Quiz(object):
             bshow.bind("<Button-1>", Quiz.showAnswer) #Button-1 means a left click on the button
             bnext.bind("<Button-1>", Quiz.nextOne)
             bprev.bind("<Button-1>", Quiz.prevOne)
-            bmenu.bind("<Button-1>", SadGuts)
+            bmenu.bind("<Button-1>", None)
             bprev.grid(row=0, column=1)
             bnext.grid(row=0, column=3)
             bmenu.grid(row=0, column=2)
