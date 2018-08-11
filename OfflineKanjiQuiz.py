@@ -110,6 +110,11 @@ class Quiz(object):
         theLabel1['text'] = main['A%s' %  random_num].value
         current = len(history_log) - 1 #This part if  global current is not called it will create a new current and fuck shit 
     
+    def SadGuts(event):
+        img = ImageTk.PhotoImage(Image.open("SadGuts.png"))
+        theLabel1['image'] =  img
+        theLabel1['text'] = 'Sorry we currently are still working on this function'
+            
     def runtk(self):
         try:
             txtlog = open('test.txt', 'a')
@@ -144,6 +149,7 @@ class Quiz(object):
             bshow.bind("<Button-1>", Quiz.showAnswer) #Button-1 means a left click on the button
             bnext.bind("<Button-1>", Quiz.nextOne)
             bprev.bind("<Button-1>", Quiz.prevOne)
+            bmenu.bind("<Button-1>", SadGuts)
             bprev.grid(row=0, column=1)
             bnext.grid(row=0, column=3)
             bmenu.grid(row=0, column=2)
@@ -157,7 +163,7 @@ class Quiz(object):
             txtlog.close()
         except Exception:
             txtlog.write('\n' + datetime.datetime.today().strftime('%Y-%m-%d') + \
-                     ' ' + datetime.datetime.today().strftime('%T') + 'Error occured. recording... %s'% history_log)
+                     ' ' + datetime.datetime.today().strftime('%T') + ' An Error occured. recording... %s'% history_log)
             txtlog.close()
             
 
