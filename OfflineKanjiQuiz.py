@@ -76,111 +76,90 @@ wb = MegaExcel('HeisigKanji.xlsx')
 main = wb.getSheet(0)
 """Making the GUI"""
 
-class kanjiQuiz(object):
-    def __init__ (self, excel, high, low, master=root, flag = False, activeSheet=0):
-        history_log = []
-        self.high = high
-        self.low = low
-        self.history_log = history_log
-        if flag:
-            wb = MegaExcel(excel)
-            main = wb.getSheet(activeSheet)
-        topFrame = Frame(master)
-        midFrame = Frame(master)
-        botFrame = Frame(master)
-        topFrame.pack()
-        midFrame.pack()
-        botFrame.pack()
-        
-        #text a.k.a lables
-        theLabel1 = Label(topFrame, text = 'press start', font='Times 100')
-        theLabel2 = Label(topFrame, text = 'Michael\'s KanjiQuiz', fg = 'green')
-        theLabel3 = Label(midFrame, text = 'Type \'y\' for correct or \'n\' for incorrect: ')
-        
-        #text/label 
-        theLabel1.grid(row=1)
-        theLabel2.grid(row=0, column=1)
-        theLabel3.grid(row=0)
-        
-        #Buttons
-        button1 = Button(botFrame, text= 'Prev')
-        button2 = Button(botFrame, text= 'Next')
-        button3 = Button(botFrame, text= 'Menu')
-        button4 = Button(botFrame, text= 'Show Answer') #no parenthesis!
-        
-        butnStart = Button(topFrame, text= 'Start')
-        butnQuit = Button(topFrame, text= 'Quit')
-        butnStart.grid(row=0, column=0)
-        butnQuit.grid(row=0, column=2)
-        
-        #Button locis            
-        button1.grid(row=0, column=1)
-        button2.grid(row=0, column=3)
-        button3.grid(row=0, column=2)
-        button4.grid(row= 0, column=4)
-        
-        entry1 = Entry(midFrame)
-        entry1.grid()
-
-    def updateLabel(event):
-        num = random.randint(250, 550)
-        theLabel1['text'] = main['A%s' % num].value
-        
-        #Button binds
-    def binds(self, master, function):
-            button4.bind("<Button-1>", function) #Button-1 means a left click on the button
-            
-
 #        random.randint()
 #        text = main['A%s' % num].value, font ='Times 100'
 
-root = Tk()
-topFrame = Frame(root, width=200, length=200)
-midFrame = Frame(root)
-botFrame = Frame(root)
-topFrame.pack()
-midFrame.pack()
-botFrame.pack()
 
-
-theLabel1 = Label(topFrame, text = main['A66'].value, font ='Times 100')
-theLabel2 = Label(topFrame, text = 'Michael\'s KanjiQuiz', fg = 'green')
-theLabel3 = Label(midFrame, text = 'Type \'y\' for correct or \'n\' for incorrect: ')
-
-theLabel1.grid(row=1)
-theLabel2.grid(row=0)
-theLabel3.grid(row=0)
-
-entry1 = Entry(midFrame)
-entry1.grid(row=1)
-
-history_log = [0, 66]
+history_log = [] #initialize with 0 so all index from len() are correct
+current = 0
 low, high = 250, 550
-def showAnswer(event):
-    n = history_log[-1]
-    answer =  main['B%s' %  n].value
-    theLabel1['text'] = answer 
 
-def nextOne(event):
-    random_num = random.randint(low, high)
-    while random_num in history_log:
+class Quiz(object):
+    def __init__ (self):
+        pass
+    def showAnswer(event):
+        global current
+        global history_log
+        print(current, history_log)
+        n = history_log[current]
+        answer =  main['B%s' %  n].value
+        theLabel1['text'] = answer
+        
+    def prevOne(event):
+        global current
+        current -= 1
+        n = history_log[current]
+        theLabel1['text'] = main['A%s' % n].value
+        
+    def nextOne(event):
+        global current
         random_num = random.randint(low, high)
-    history_log.append(random_num)
-    theLabel1['text'] = main['A%s' %  random_num].value    
+        while random_num in history_log:
+            random_num = random.randint(low,high)
+        history_log.append(random_num)
+        theLabel1['text'] = main['A%s' %  random_num].value
+        current = len(history_log) - 1 #This part if  global current is not called it will create a new current and fuck shit 
+    
+    def runtk(self):
+        try:
+            txtlog = open('test.txt', 'a')
+            """Start"""
+            root = Tk()
+            root.geometry('{}x{}'.format(888, 300))
+            root.title('Kanji Quiz')
+            
+            """top frame"""
+            topFrame = Frame(root, )
+            global theLabel1
+            theLabel1 = Label(topFrame, text = 'Press Next!', font ='Times 100')
+            theLabel2 = Label(topFrame, text = 'SHITTY QUIZ', fg = 'green')
+            theLabel1.grid(row=1)
+            theLabel2.grid(row=0)
+            topFrame.pack()
+            
+            """mid frame"""
+            midFrame = Frame(root)
+            theLabel3 = Label(midFrame, text = 'Type \'y\' for correct or \'n\' for incorrect: ')
+            entry1 = Entry(midFrame)
+            theLabel3.grid(row=0)
+            entry1.grid(row=1)
+            midFrame.pack()
+            
+            """bot frame"""
+            botFrame = Frame(root)
+            bprev = Button(botFrame, text= 'Prev')
+            bnext = Button(botFrame, text= 'Next')
+            bmenu = Button(botFrame, text= 'Menu')
+            bshow = Button(botFrame, text= 'Show Answer') #no parenthesis!
+            bshow.bind("<Button-1>", Quiz.showAnswer) #Button-1 means a left click on the button
+            bnext.bind("<Button-1>", Quiz.nextOne)
+            bprev.bind("<Button-1>", Quiz.prevOne)
+            bprev.grid(row=0, column=1)
+            bnext.grid(row=0, column=3)
+            bmenu.grid(row=0, column=2)
+            bshow.grid(row= 0, column=4)
+            botFrame.pack()
+            """End"""
+            root.mainloop()
+            
+            txtlog.write('\n' + datetime.datetime.today().strftime('%Y-%m-%d') + ' ' \
+                     + datetime.datetime.today().strftime('%T') + ' %s'% history_log)
+            txtlog.close()
+        except Exception:
+            txtlog.write('\n' + datetime.datetime.today().strftime('%Y-%m-%d') + \
+                     ' ' + datetime.datetime.today().strftime('%T') + 'Error occured. recording... %s'% history_log)
+            txtlog.close()
+            
 
-button1 = Button(botFrame, text= 'Prev')
-button2 = Button(botFrame, text= 'Next')
-button3 = Button(botFrame, text= 'Menu')
-button4 = Button(botFrame, text= 'Show Answer') #no parenthesis!
-
-button4.bind("<Button-1>", showAnswer) #Button-1 means a left click on the button
-button2.bind("<Button-1>", nextOne)
-
-button1.grid(row=0, column=1)
-button2.grid(row=0, column=3)
-button3.grid(row=0, column=2)
-button4.grid(row= 0, column=4)
-
-root.mainloop()
-
-
+a = Quiz()
+a.runtk()
