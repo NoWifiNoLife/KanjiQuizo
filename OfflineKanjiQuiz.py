@@ -82,7 +82,7 @@ main = wb.getSheet(0)
 
 history_log = [] #initialize with 0 so all index from len() are correct
 current = 0
-low, high = 250, 550
+low, high = 0, 250
 
 class Quiz(object):
     def __init__ (self):
